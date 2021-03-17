@@ -29,17 +29,21 @@ if __name__ == '__main__':
             continue
         commandIndex = menuList.index(answer[0])
         if commandIndex == 0:
-            manager.create(answer[1:])
+            answer = manager.create(answer[1:])
+            if answer != "Ok":
+                print(answer)
         if commandIndex == 1:
-            manager.delete(answer[1:])
+            answer = manager.delete(answer[1:])
+            if answer != "Ok":
+                print(answer)
         if commandIndex == 2:
             manager.open(answer[1:])
         if commandIndex == 3:
-            manager.move(answer[1:])
+            manager.mov(answer[1:])
         if commandIndex == 4:
-            manager.copy(answer[1:])
+            manager.cop(answer[1:])
         if commandIndex == 5:
-            manager.rename(answer[1:])
+            manager.renam(answer[1:])
         if commandIndex == 6:
             print("Good bye")
             break
