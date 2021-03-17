@@ -5,6 +5,11 @@ class WinMng:
     def __init__(self, path):
         """Constructor"""
         self.path = path
+        if os.path.exists(path):
+            os.chdir(path)
+        else:
+            self.path = os.getcwd()
+        self.root = path
 
     def create(self, options):
         if options[0] == "-f":
@@ -49,14 +54,34 @@ class WinMng:
         else:
             return "Wrong input format"
 
+    def changeDirectory(self, options):
+        name = ' '.join(options[1:])
+        if name == "..":
+            substr = self.path.partition(self.root)[2]
+            if substr.count("\\") == 0:
+                return "It is a root directory"
+            else:
+                os.chdir("..")
+                self.path = os.getcwd()
+                return "Ok"
+        else:
+            if os.path.isdir(os.path.join(self.path, name)):
+                os.chdir(os.path.join(self.path, name))
+                self.path = os.getcwd()
+                return "Ok"
+            else:
+                return "Such directory does not exist"
+
+
     def open(self, options):
         pass
 
-    def mov(self, options):
+    def move(self, options):
         pass
 
-    def cop(self, options):
+    def copy(self, options):
         pass
 
-    def renam(self, options):
+    def rename(self, options):
         pass
+

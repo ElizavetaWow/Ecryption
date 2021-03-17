@@ -15,7 +15,7 @@ def askAction():
 
 
 if __name__ == '__main__':
-    menuList = ["create", "delete", "open", "move", "copy", "rename", "exit"]
+    menuList = ["create", "delete", "open", "moveto", "copypaste", "renamef", "change", "exit"]
     print('Welcome to file manager!\n')
     platformName = platform.system()
     print('Your OS is :', platformName, '.\n')
@@ -29,23 +29,24 @@ if __name__ == '__main__':
             continue
         commandIndex = menuList.index(answer[0])
         if commandIndex == 0:
-            answer = manager.create(answer[1:])
-            if answer != "Ok":
-                print(answer)
+            ans = manager.create(answer[1:])
         if commandIndex == 1:
-            answer = manager.delete(answer[1:])
-            if answer != "Ok":
-                print(answer)
+            ans = manager.delete(answer[1:])
         if commandIndex == 2:
             manager.open(answer[1:])
         if commandIndex == 3:
-            manager.mov(answer[1:])
+            manager.move(answer[1:])
         if commandIndex == 4:
-            manager.cop(answer[1:])
+            manager.copy(answer[1:])
         if commandIndex == 5:
-            manager.renam(answer[1:])
+            manager.rename(answer[1:])
         if commandIndex == 6:
+            answer = manager.changeDirectory(answer[1:])
+        if commandIndex == 7:
             print("Good bye")
             break
+        if ans != "Ok":
+            print(ans)
+
 
 

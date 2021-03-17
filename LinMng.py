@@ -13,11 +13,14 @@ class LinMng:
     def open(self, options):
         pass
 
-    def mov(self, options):
+    def move(self, options):
         pass
 
-    def cop(self, options):
+    def copy(self, options):
         pass
 
-    def renam(self, options):
+    def rename(self, options):
+        pass
+
+    def changeDirectory(self, options):
         pass
