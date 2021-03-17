@@ -1,5 +1,6 @@
 import os
 
+
 class WinMng:
 
     def __init__(self, path):
@@ -14,8 +15,10 @@ class WinMng:
     def create(self, options):
         if options[0] == "-f":
             name = ' '.join(options[1:])
-            if not os.path.isfile(os.path.join(self.path, name)):
-                text_file = open(os.path.join(self.path, name), "w")
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if not os.path.isfile(name):
+                text_file = open(name, "w")
                 text_file.close()
                 return "Ok"
             else:
@@ -23,8 +26,10 @@ class WinMng:
         elif options[0] == "-d":
             name = ' '.join(options[1:])
             name.replace("\\", "\\\\")
-            if not os.path.isdir(os.path.join(self.path, name)):
-                os.makedirs(os.path.join(self.path, name))
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if not os.path.isdir(name):
+                os.makedirs(name)
                 return "Ok"
             else:
                 return "Such directory already exists"
@@ -34,17 +39,21 @@ class WinMng:
     def delete(self, options):
         if options[0] == "-f":
             name = ' '.join(options[1:])
-            if os.path.isfile(os.path.join(self.path, name)):
-                os.remove(os.path.join(self.path, name))
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if os.path.isfile(name):
+                os.remove(name)
                 return "Ok"
             else:
                 return "Such file does not exist"
         elif options[0] == "-d":
             name = ' '.join(options[1:])
             name.replace("\\", "\\\\")
-            if os.path.isdir(os.path.join(self.path, name)):
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if os.path.isdir(name):
                 try:
-                    os.rmdir(os.path.join(self.path, name))
+                    os.rmdir(name)
                     return "Ok"
                 except OSError:
                     return "Directory is not empty"
@@ -54,8 +63,8 @@ class WinMng:
         else:
             return "Wrong input format"
 
-    def changeDirectory(self, options):
-        name = ' '.join(options[1:])
+    def change_directory(self, options):
+        name = ' '.join(options)
         if name == "..":
             substr = self.path.partition(self.root)[2]
             if substr.count("\\") == 0:
@@ -65,19 +74,23 @@ class WinMng:
                 self.path = os.getcwd()
                 return "Ok"
         else:
-            if os.path.isdir(os.path.join(self.path, name)):
-                os.chdir(os.path.join(self.path, name))
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if os.path.isdir(name):
+                os.chdir(name)
                 self.path = os.getcwd()
+                self.print_content()
                 return "Ok"
             else:
                 return "Such directory does not exist"
 
-
     def open(self, options):
         if options[0] == "-r":
             name = ' '.join(options[1:])
-            if os.path.isfile(os.path.join(self.path, name)):
-                text_file = open(os.path.join(self.path, name), "r")
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if os.path.isfile(name):
+                text_file = open(name, "r")
                 for i in text_file.readlines():
                     print(i)
                 text_file.close()
@@ -86,7 +99,9 @@ class WinMng:
                 return "Such file does not exist"
         elif options[0] == "-w":
             name = ' '.join(options[1:])
-            text_file = open(os.path.join(self.path, name), "w")
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            text_file = open(name, "w")
             text = input("Write text for file: \n")
             text_file.write(text)
             text_file.close()
@@ -97,11 +112,15 @@ class WinMng:
     def move(self, options):
         name = ' '.join(options).split("\"")
         if len(name) == 5:
-            lastPlace = name[1]
-            newPlace = name[3]
-            if os.path.isfile(os.path.join(self.path, lastPlace)):
-                if os.path.isdir(os.path.join(self.path, newPlace)):
-                    os.replace(os.path.join(self.path, lastPlace), os.path.join(self.path, newPlace))
+            last_place = name[1]
+            new_place = name[3]
+            if not (self.root in last_place):
+                last_place = os.path.join(self.path, last_place)
+            if not (self.root in new_place):
+                new_place = os.path.join(self.path, new_place)
+            if os.path.isfile(last_place):
+                if os.path.isdir(new_place):
+                    os.replace(last_place, new_place)
                     return "Ok"
                 else:
                     return "Final directory does not exist"
@@ -113,11 +132,15 @@ class WinMng:
     def copy(self, options):
         name = ' '.join(options).split("\"")
         if len(name) == 5:
-            lastPlace = name[1]
-            newPlace = name[3]
-            if os.path.isfile(os.path.join(self.path, lastPlace)):
-                if os.path.isdir(os.path.join(self.path, newPlace)):
-                    os.system('copy '+lastPlace+' '+ newPlace)
+            last_place = name[1]
+            new_place = name[3]
+            if not (self.root in last_place):
+                last_place = os.path.join(self.path, last_place)
+            if not (self.root in new_place):
+                new_place = os.path.join(self.path, new_place)
+            if os.path.isfile(last_place):
+                if os.path.isdir(new_place):
+                    os.system('copy ' + last_place + ' ' + new_place)
                     return "Ok"
                 else:
                     return "Final directory does not exist"
@@ -129,11 +152,15 @@ class WinMng:
     def rename(self, options):
         name = ' '.join(options).split("\"")
         if len(name) == 5:
-            lastName = name[1]
-            newName = name[3]
-            if os.path.isfile(os.path.join(self.path, lastName)):
-                if not os.path.isfile(os.path.join(self.path, newName)):
-                    os.rename(os.path.join(self.path, lastName), os.path.join(self.path, newName))
+            last_name = name[1]
+            new_name = name[3]
+            if not (self.root in last_name):
+                last_name = os.path.join(self.path, last_name)
+            if not (self.root in new_name):
+                new_name = os.path.join(self.path, new_name)
+            if os.path.isfile(last_name):
+                if not os.path.isfile(new_name):
+                    os.rename(last_name, new_name)
                     return "Ok"
                 else:
                     return "Such file already exists"
@@ -142,3 +169,6 @@ class WinMng:
         else:
             return "Wrong input format"
 
+    def print_content(self):
+        for i in os.listdir(self.path):
+            print(i)
