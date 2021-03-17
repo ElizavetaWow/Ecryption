@@ -1,3 +1,6 @@
+import os
+
+
 class LinMng:
 
     def __init__(self, path):
@@ -60,18 +63,69 @@ class LinMng:
             return "Wrong input format"
 
     def open(self, options):
-        pass
+        if options[0] == "-r":
+            name = ' '.join(options[1:])
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            if os.path.isfile(name):
+                os.system('cat ' + name)
+                return "Ok"
+            else:
+                return "Such file does not exist"
+        elif options[0] == "-w":
+            name = ' '.join(options[1:])
+            if not (self.root in name):
+                name = os.path.join(self.path, name)
+            text = input("Write text for file: \n")
+            os.system('echo ' + '"' + text + '" ' + '>> ' + name)
+            return "Ok"
+        else:
+            return "Wrong input format"
 
     def move(self, options):
-        pass
+        name = ' '.join(options).split("\"")
+        if len(name) == 5:
+            last_place = name[1]
+            new_place = name[3]
+            if not (self.root in last_place):
+                last_place = os.path.join(self.path, last_place)
+            if not (self.root in new_place):
+                new_place = os.path.join(self.path, new_place)
+            if os.path.isfile(last_place):
+                if os.path.isdir(new_place):
+                    os.system('mv ' + last_place + ' ' + new_place)
+                    return "Ok"
+                else:
+                    return "Final directory does not exist"
+            else:
+                return "Such file does not exist"
+        else:
+            return "Wrong input format"
 
     def copy(self, options):
-        pass
+        name = ' '.join(options).split("\"")
+        if len(name) == 5:
+            last_place = name[1]
+            new_place = name[3]
+            if not (self.root in last_place):
+                last_place = os.path.join(self.path, last_place)
+            if not (self.root in new_place):
+                new_place = os.path.join(self.path, new_place)
+            if os.path.isfile(last_place):
+                if os.path.isdir(new_place):
+                    os.system('cp ' + last_place + ' ' + new_place)
+                    return "Ok"
+                else:
+                    return "Final directory does not exist"
+            else:
+                return "Such file does not exist"
+        else:
+            return "Wrong input format"
 
     def rename(self, options):
-        pass
+        self.move(options)
 
-    def changeDirectory(self, options):
+    def change_directory(self, options):
         name = ' '.join(options)
         if name == "..":
             substr = self.path.partition(self.root)[2]

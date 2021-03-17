@@ -27,11 +27,13 @@ if __name__ == '__main__':
     print('Welcome to file manager!')
     platformName = platform.system()
     print('Your OS is :', platformName)
+    settings = open("Settings.txt", "r")
+    root = settings.readline().split("=")[1]
     if platformName == "Windows":
-        manager = WinMng.WinMng('D:\\')
+        manager = WinMng.WinMng(root)
     if platformName == "Linux":
-        manager = LinMng.LinMng('D:\\')
-    print('Now you here : D:\\. List of elements: ')
+        manager = LinMng.LinMng(root)
+    print(f'Now you here : {root}. List of elements: ')
     manager.print_content()
     while True:
         answer = ask_action()
