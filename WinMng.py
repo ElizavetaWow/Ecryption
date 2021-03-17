@@ -101,5 +101,18 @@ class WinMng:
         pass
 
     def rename(self, options):
-        pass
+        name = ' '.join(options)
+        if name.count(self.root) == 2:
+            lastName = name[:name.index(self.root, 1) - 1]
+            newName = name[name.index(self.root, 1):]
+            if os.path.isfile(lastName):
+                if not os.path.isfile(newName):
+                    os.rename(lastName, newName)
+                    return "Ok"
+                else:
+                    return "Such file already exists"
+            else:
+                return "Such file does not exist"
+        else:
+            return "Wrong input format"
 
