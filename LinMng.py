@@ -132,14 +132,16 @@ class LinMng:
             if substr.count("\\") == 0:
                 return "It is a root directory"
             else:
-                os.system('cd ..')
+                os.popen('cd ..')
+                os.chdir(os.path.expandvars(".."))
                 self.path = os.getcwd()
                 return "Ok"
         else:
-            if not (self.root in name):
+            if not(self.root in name):
                 name = os.path.join(self.path, name)
             if os.path.isdir(name):
-                os.system('cd ' + name)
+                os.popen('cd ' + name)
+                os.chdir(os.path.expandvars(name))
                 self.path = os.getcwd()
                 self.print_content()
                 return "Ok"
