@@ -111,7 +111,20 @@ class WinMng:
             return "Wrong input format"
 
     def copy(self, options):
-        pass
+        name = ' '.join(options).split("\"")
+        if len(name) == 5:
+            lastPlace = name[1]
+            newPlace = name[3]
+            if os.path.isfile(os.path.join(self.path, lastPlace)):
+                if os.path.isdir(os.path.join(self.path, newPlace)):
+                    os.system('copy '+lastPlace+' '+ newPlace)
+                    return "Ok"
+                else:
+                    return "Final directory does not exist"
+            else:
+                return "Such file does not exist"
+        else:
+            return "Wrong input format"
 
     def rename(self, options):
         name = ' '.join(options).split("\"")
