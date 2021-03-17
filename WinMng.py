@@ -95,19 +95,32 @@ class WinMng:
             return "Wrong input format"
 
     def move(self, options):
-        pass
+        name = ' '.join(options).split("\"")
+        if len(name) == 5:
+            lastPlace = name[1]
+            newPlace = name[3]
+            if os.path.isfile(os.path.join(self.path, lastPlace)):
+                if os.path.isdir(os.path.join(self.path, newPlace)):
+                    os.replace(os.path.join(self.path, lastPlace), os.path.join(self.path, newPlace))
+                    return "Ok"
+                else:
+                    return "Final directory does not exist"
+            else:
+                return "Such file does not exist"
+        else:
+            return "Wrong input format"
 
     def copy(self, options):
         pass
 
     def rename(self, options):
-        name = ' '.join(options)
-        if name.count(self.root) == 2:
-            lastName = name[:name.index(self.root, 1) - 1]
-            newName = name[name.index(self.root, 1):]
-            if os.path.isfile(lastName):
-                if not os.path.isfile(newName):
-                    os.rename(lastName, newName)
+        name = ' '.join(options).split("\"")
+        if len(name) == 5:
+            lastName = name[1]
+            newName = name[3]
+            if os.path.isfile(os.path.join(self.path, lastName)):
+                if not os.path.isfile(os.path.join(self.path, newName)):
+                    os.rename(os.path.join(self.path, lastName), os.path.join(self.path, newName))
                     return "Ok"
                 else:
                     return "Such file already exists"
