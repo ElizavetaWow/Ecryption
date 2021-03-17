@@ -74,7 +74,25 @@ class WinMng:
 
 
     def open(self, options):
-        pass
+        if options[0] == "-r":
+            name = ' '.join(options[1:])
+            if os.path.isfile(os.path.join(self.path, name)):
+                text_file = open(os.path.join(self.path, name), "r")
+                for i in text_file.readlines():
+                    print(i)
+                text_file.close()
+                return "Ok"
+            else:
+                return "Such file does not exist"
+        elif options[0] == "-w":
+            name = ' '.join(options[1:])
+            text_file = open(os.path.join(self.path, name), "w")
+            text = input("Write text for file: \n")
+            text_file.write(text)
+            text_file.close()
+            return "Ok"
+        else:
+            return "Wrong input format"
 
     def move(self, options):
         pass

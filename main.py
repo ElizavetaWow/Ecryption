@@ -33,15 +33,15 @@ if __name__ == '__main__':
         if commandIndex == 1:
             ans = manager.delete(answer[1:])
         if commandIndex == 2:
-            manager.open(answer[1:])
+            ans = manager.open(answer[1:])
         if commandIndex == 3:
-            manager.move(answer[1:])
+            ans = manager.move(answer[1:])
         if commandIndex == 4:
-            manager.copy(answer[1:])
+            ans = manager.copy(answer[1:])
         if commandIndex == 5:
-            manager.rename(answer[1:])
+            ans = manager.rename(answer[1:])
         if commandIndex == 6:
-            answer = manager.changeDirectory(answer[1:])
+            ans = manager.changeDirectory(answer[1:])
         if commandIndex == 7:
             print("Good bye")
             break
