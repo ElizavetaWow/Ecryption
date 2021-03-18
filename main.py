@@ -4,11 +4,6 @@ import LinMng
 import WinMng
 
 
-def main_menu():
-    print("You can do following operations: ")
-    print("1.Open \n2.Rename \n3.Move and Paste \n4.Copy and Paste \n5.Delete\n6.Create files\nexit")
-
-
 def ask_action():
     command = input("Print a command: ").split()
     if command[0].lower() in menuList:
@@ -19,12 +14,29 @@ def ask_action():
 
 
 def print_instractions():
-    pass
+    comands  = {"create type name":"Создание файла (type = \"-f\") или директории (type = \"-d\") с названием name",
+                "delete type name":"Удаление файла (type = \"-f\") или директории (type = \"-d\") с названием name",
+                "renamef \"lastname\" \"newname\"":"Переименование файла или директории с именем lastname на newname (двойные кавычки обязательны)",
+                "change newplace":"Переход в директорию с именем newplace или на уровень выше, если newplace = \"..\"",
+                "open type name":"Открытие файла для записи (type = \"-w\") или для чтения (type = \"-r\") с названием name",
+                "moveto \"lastplace\" \"newplace\"":"Перемещение файла с именем lastname в директорию с именем newplace (двойные кавычки обязательны)",
+                "copypaste \"lastplace\" \"newplace\"":"Копирование файла с именем lastname в директорию с именем newplace (двойные кавычки обязательны)",
+                "content":"Содержимое текущей директории",
+                "exit":"Завешение работы",
+                "help":"Вызов справки по командам"}
+    i = 1
+    for k, v in comands.items():
+        print(i, ') ', k, ' - ', v)
+        i += 1
+    
+    
+   
 
 
 if __name__ == '__main__':
-    menuList = ["create", "delete", "open", "moveto", "copypaste", "renamef", "change", "exit", "help"]
+    menuList = ["create", "delete", "open", "moveto", "copypaste", "renamef", "change", "exit", "help", "content"]
     print('Welcome to file manager!')
+    print("Данный файловый менеджер автоматически выбирает ОС, с которой будет работать. \nВ его функции входят создание, редактирование, удаление файлов и директорий, переход между папками, копирование и перемещение файлов.\nКорневая папка определяется в настройках (файл Settings.txt). Все возможные команды с ключами можно посмотреть по команде help.")
     platformName = platform.system()
     print('Your OS is :', platformName)
     settings = open("Settings.txt", "r")
@@ -33,8 +45,8 @@ if __name__ == '__main__':
         manager = WinMng.WinMng(root)
     if platformName == "Linux":
         manager = LinMng.LinMng(root)
-    print(f'Now you here : {root}. List of elements: ')
-    manager.print_content()
+    print(f'Now you here : {root}.')
+    print_instractions()
     while True:
         answer = ask_action()
         if answer == "Not Found":
@@ -59,6 +71,9 @@ if __name__ == '__main__':
             break
         if commandIndex == 8:
             print_instractions()
+        if commandIndex == 9:
+            ans = "Ok"
+            manager.print_content()
         if ans != "Ok":
             print(ans)
         else:

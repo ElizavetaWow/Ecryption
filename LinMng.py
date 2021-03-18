@@ -149,5 +149,6 @@ class LinMng:
                 return "Such directory does not exist"
 
     def print_content(self):
+        print("List of elements of ", self.path, ":")
         for i in os.listdir(self.path):
             print(i)

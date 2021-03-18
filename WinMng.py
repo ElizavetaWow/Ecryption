@@ -170,5 +170,6 @@ class WinMng:
             return "Wrong input format"
 
     def print_content(self):
+        print("List of elements of ", self.path, ":")
         for i in os.listdir(self.path):
             print(i)
