@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import socket, sys
+import socket
+
 
 def getData(conn, n):
     try:
@@ -17,40 +18,40 @@ def getData(conn, n):
 
 def getInput(msg):
     try:
-        promt = input(msg)
-        return promt, True 
+        prompt = input(msg)
+        return prompt, True
     except KeyboardInterrupt as k:
         print(k)
         return "Exception", False
 
-    
+
 sock = socket.socket()
 host = getInput('Write hostname:')
-if not(host[1]):
+if not (host[1]):
     print("Stop program")
     exit()
-socnum = getInput('Write socket:')
-if  not(socnum[1]):
+socket_number = getInput('Write socket:')
+if not (socket_number[1]):
     print("Stop program")
     exit()
-host, socnum = host[0], socnum[0] 
+host, socket_number = host[0], socket_number[0]
 if not host:
     host = 'localhost'
-if not socnum:
-    socnum = 1025
-print('Connecting to server')
+if not socket_number:
+    socket_number = 1025
+print(f'Connecting to server on port {host}, {socket_number}')
 try:
-    sock.connect((host, int(socnum)))
-except ConnectionRefusedError as c:
+    sock.connect((host, int(socket_number)))
+except ConnectionRefusedError:
     print("Connection refused")
     exit()
-except ValueError as v:
+except ValueError:
     print("Invalid socket data. Connection refused")
     exit()
 
 print('Connection established')
 
-data, status  = getData(sock, 1024)
+data, status = getData(sock, 1024)
 if not status:
     sock.close()
     exit()
@@ -68,15 +69,13 @@ while s != "exit":
     if not sts or not s:
         break
     sock.send(s.encode())
-    print('Receiving data from server')
-    data, status  = getData(sock, 1024)
+    data, status = getData(sock, 1024)
     if not status:
         sock.close()
         print('End connection with server')
         exit()
-    print('Answer: ', data.decode())
+    print(data.decode())
 sock.send('exit'.encode())
-
 
 print('End connection with server')
 sock.close()
