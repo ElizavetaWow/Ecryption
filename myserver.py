@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import errno, socket
+import errno
 import json
+import socket
+
 import SocketPlus
+
 
 def sendP(conn, data):
     prefix = str(len(data)).zfill(10)
     conn.send((prefix + data).encode())
+
 
 def getP(conn):
     try:
@@ -17,6 +21,7 @@ def getP(conn):
         return data.decode()
     except Exception:
         return None
+
 
 try:
     open('clients.json', 'r')
