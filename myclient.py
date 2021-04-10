@@ -2,7 +2,40 @@
 # -*- coding: utf-8 -*-
 from commonFuncs import *
 import socket
+import threading
 
+class Sender(threading.Thread):
+    def __init__(self, sock):
+        threading.Thread.__init__(self, name=str(sock))
+        self.sock = sock
+
+    def run(self):
+        try:
+            while True:
+                msg = input()
+                if not msg or msg == 'exit':
+                    sendP(self.sock, msg)
+                    return
+                sendP(self.sock, msg)
+        except KeyboardInterrupt as k:
+            sendP(self.sock, '')
+            print(k)
+        except ConnectionRefusedError:
+            print("Connection refused")
+        except Exception as s:
+            print(s)
+
+class Listener(threading.Thread):
+    def __init__(self, sock):
+        threading.Thread.__init__(self, name=str(sock))
+        self.sock = sock
+
+    def run(self):
+        while True:
+            data = getP(sock)
+            if not data:
+                return
+            print(data)
 
 def getAddress():
     host = input('Write hostname:')
@@ -28,25 +61,21 @@ def login(sock):
     else:
         return False
 
-
 sock = socket.socket()
 sock.setblocking(1)
-
+status = True
 try:
     host, socket_number = getAddress()
     print(f'Connecting to server on port {host}, {socket_number}')
     sock.connect((host, socket_number))
     print('Connection established')
     if login(sock):
-        while True:
-            msg = input('Write message to server\n')
-            if not msg:
-                break
-            sendP(sock, msg)
-            data = getP(sock)
-            if not data:
-                break
-            print(data)
+        listener = Listener(sock)
+        listener.start()
+        sender = Sender(sock)
+        sender.start()
+        sender.join()
+        listener.join()
     print('End connection with server')
 
 except KeyboardInterrupt as k:
@@ -54,6 +83,6 @@ except KeyboardInterrupt as k:
 except ConnectionRefusedError:
     print("Connection refused")
 except Exception as s:
-    print(s)
+    print("Connection failed")
 finally:
     sock.close()

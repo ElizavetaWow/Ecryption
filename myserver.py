@@ -17,14 +17,14 @@ class User(threading.Thread):
         try:
             if self.authentication():
                 while True:
-                    with lock2:
-                        with open('log.txt', 'a') as log:
-                            log.write('Server sending data to ' + str(self.host) + " " + str(self.port) + '\n')
                     data = getP(self.conn)
                     if not data or (data == 'exit'):
                         sendP(self.conn, '')
-                        break
-                    sendAll(users, self.conn, data.upper())
+                    else:
+                        with lock2:
+                            with open('history.txt', 'a') as history:
+                                history.write(f'[{self.name}]: {data}\n')
+                        sendAll(users, self, data.upper())
         except KeyboardInterrupt as k:
             with lock2:
                 with open('log.txt', 'a') as log:
@@ -52,6 +52,7 @@ class User(threading.Thread):
                 name, password = client_dict.get(key)
                 if name == nameEnter and password == passwordEnter:
                     sendP(self.conn, "Login completed")
+                    self.name = name
                 else:
                     sendP(self.conn, "Login failed. Goodbye!")
                     result = False
@@ -59,8 +60,10 @@ class User(threading.Thread):
                 if not nameEnter or not passwordEnter:
                     sendP(self.conn, "Wrong input values!")
                     result = False
-                client_dict[key] = [nameEnter, passwordEnter]
-                sendP(self.conn, "Registration completed")
+                else:
+                    client_dict[key] = [nameEnter, passwordEnter]
+                    self.name = nameEnter
+                    sendP(self.conn, "Registration completed")
             with open('clients.json', 'w') as cl:
                 json.dump(client_dict, cl)
         return result
