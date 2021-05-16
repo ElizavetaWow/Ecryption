@@ -13,3 +13,10 @@ Request date         - Client IP - Requested page - Error code
 16/05/2021, 13:17:38 - 127.0.0.1 - /index.html - None
 16/05/2021, 13:23:26 - 127.0.0.1 - /index.html - None
 16/05/2021, 13:23:26 - 127.0.0.1 - /index.html - None
+16/05/2021, 13:30:01 - 127.0.0.1 - /index.html - None
+16/05/2021, 13:36:13 - 127.0.0.1 - /pic.png - None
+16/05/2021, 13:39:26 - 127.0.0.1 - /pic.png - None
+16/05/2021, 13:43:12 - 127.0.0.1 - /index.html - None
+16/05/2021, 13:48:46 - 127.0.0.1 - /pic.png - None
+16/05/2021, 13:48:56 - 127.0.0.1 - /index.html - None
+16/05/2021, 13:49:01 - 127.0.0.1 - /pic.png - None

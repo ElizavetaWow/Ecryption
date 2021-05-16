@@ -13,11 +13,11 @@ class User(threading.Thread):  # класс потока пользовател�
         self.conn = conn
 
     def run(self):
-        #отображение запроса от клиента
+        # отображение запроса от клиента
         request = self.conn.recv(DATA_SIZE).decode()
         if request != '':
             print(request)
-            #отображение нужной страницы
+            # отображение нужной страницы
             headers = request.split('\n')
             page = headers[0].split()[1]
             if page == '/':
@@ -27,14 +27,24 @@ class User(threading.Thread):  # класс потока пользовател�
 
             if page.split('.')[-1] in FILE_FORMATS:
                 try:
-                    with open(SERVER_FOLDER + page, 'r') as file:
-                        page_content = file.read()
-                    response = """HTTP/1.1 200 OK
-                            Server: SelfMadeServer v0.0.1
-                            Content-type: text/html
-                            Content-length: 5000
-                            Date: """ + format_date_time(mktime(datetime.now().timetuple())) + """
-                            Connection: close\n\n""" + page_content
+                    try:
+                        with open(SERVER_FOLDER + page, 'r') as file:
+                            page_content = file.read()
+                        response = """HTTP/1.1 200 OK
+                                Server: SelfMadeServer v0.0.1
+                                Content-type: text/html
+                                Content-length: 5000
+                                Date: """ + format_date_time(mktime(datetime.now().timetuple())) + """
+                                Connection: close\n\n""" + page_content
+                    except UnicodeDecodeError: #для работы с картинками (бинарный тип данных)
+                        with open(SERVER_FOLDER + page, 'rb') as file:
+                            page_content = file.read()
+                        response = """HTTP/1.1 200 OK
+                                Server: SelfMadeServer v0.0.1
+                                Content-type: image/png
+                                Content-length: 5000
+                                Date: """ + format_date_time(mktime(datetime.now().timetuple())) + """
+                                Connection: close\n\n"""
                     with lock:
                         with open('log.txt', 'a+') as log:
                             log.write(str(datetime.now().strftime("%d/%m/%Y, %H:%M:%S")) + ' - ' + self.host
@@ -52,7 +62,10 @@ class User(threading.Thread):  # класс потока пользовател�
                         with open('log.txt', 'a+') as log:
                             log.write(str(datetime.now().strftime("%d/%m/%Y, %H:%M:%S")) + ' - ' +
                                       self.host + ' - ' + page + ' - 403\n')
-            self.conn.sendall(response.encode())
+            if "Content-type: image/png" in response:
+                self.conn.sendall(response.encode()+page_content)
+            else:
+                self.conn.sendall(response.encode())
         self.conn.close()
 
 
